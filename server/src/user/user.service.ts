@@ -45,4 +45,12 @@ export class UserService {
       throw new InternalServerErrorException('Failed to register user. Please try again.');
     }
   }
+
+  async findByEmail(email: string): Promise<User | null> {
+    return this.userRepository.findOne({ where: { email } });
+  }
+
+  async findById(id: string): Promise<User | null> {
+    return this.userRepository.findOne({ where: { id } });
+  }
 }

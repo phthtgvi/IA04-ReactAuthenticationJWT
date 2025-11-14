@@ -1,14 +1,35 @@
+'use client'
+
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useAuth } from '../contexts/AuthContext'
 
 export default function HomePage() {
+    const router = useRouter()
+    const { isAuthenticated, isLoading } = useAuth()
+
+    useEffect(() => {
+        if (!isLoading && isAuthenticated) {
+            router.push('/dashboard')
+        }
+    }, [isAuthenticated, isLoading, router])
+
+    if (isLoading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-600"></div>
+            </div>
+        )
+    }
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
             <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
                 <h1 className="text-4xl font-bold text-gray-800 mb-4">
-                    Welcome to User Registration
+                    JWT Authentication System
                 </h1>
                 <p className="text-gray-600 mb-8">
-                    A simple and secure user registration system built with Next.js and NestJS
+                    A secure authentication system with JWT access and refresh tokens
                 </p>
 
                 <div className="space-y-4">
@@ -30,10 +51,10 @@ export default function HomePage() {
                 <div className="mt-8 pt-6 border-t border-gray-200">
                     <h2 className="text-sm font-semibold text-gray-700 mb-2">Features:</h2>
                     <ul className="text-sm text-gray-600 space-y-1">
-                        <li>Secure password hashing</li>
-                        <li>Email validation</li>
-                        <li>Real-time form validation</li>
-                        <li>User-friendly error messages</li>
+                        <li>JWT Access & Refresh Tokens</li>
+                        <li>Automatic Token Refresh</li>
+                        <li>Protected Routes</li>
+                        <li>Secure Authentication Flow</li>
                     </ul>
                 </div>
             </div>

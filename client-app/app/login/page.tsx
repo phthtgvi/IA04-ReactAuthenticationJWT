@@ -1,8 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useLogin } from '../../hooks/useAuth'
+import { useAuth } from '../../contexts/AuthContext'
 
 interface LoginForm {
     email: string
@@ -10,18 +13,27 @@ interface LoginForm {
 }
 
 export default function LoginPage() {
-    const [loginSuccess, setLoginSuccess] = useState(false)
+    const router = useRouter()
+    const { isAuthenticated } = useAuth()
+    const loginMutation = useLogin()
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm<LoginForm>()
 
+    useEffect(() => {
+        if (isAuthenticated) {
+            router.push('/dashboard')
+        }
+    }, [isAuthenticated, router])
+
     const onSubmit = (data: LoginForm) => {
-        console.log('Login data:', data)
-        // Mock login success
-        setLoginSuccess(true)
-        setTimeout(() => setLoginSuccess(false), 3000)
+        loginMutation.mutate(data, {
+            onSuccess: () => {
+                router.push('/dashboard')
+            },
+        })
     }
 
     return (
@@ -34,9 +46,11 @@ export default function LoginPage() {
                     </p>
                 </div>
 
-                {loginSuccess && (
-                    <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-                        <p className="text-green-800 text-sm">Login successful! (Mock)</p>
+                {loginMutation.isError && (
+                    <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                        <p className="text-red-800 text-sm">
+                            {loginMutation.error?.message || 'Login failed. Please try again.'}
+                        </p>
                     </div>
                 )}
 
@@ -89,9 +103,10 @@ export default function LoginPage() {
 
                     <button
                         type="submit"
-                        className="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 transition duration-200 font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        disabled={loginMutation.isPending}
+                        className="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 transition duration-200 font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        Sign In
+                        {loginMutation.isPending ? 'Signing In...' : 'Sign In'}
                     </button>
                 </form>
 
