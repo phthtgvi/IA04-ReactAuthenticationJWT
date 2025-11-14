@@ -2,16 +2,6 @@
 
 A complete React single-page application implementing secure authentication using JWT access tokens and refresh tokens. Built with Next.js, NestJS, Axios, React Query, and React Hook Form.
 
-## Features
-
-- **JWT Authentication**: Access tokens (15 minutes) and refresh tokens (7 days)
-- **Automatic Token Refresh**: Seamless token renewal using Axios interceptors
-- **Protected Routes**: Route guards for authenticated-only content
-- **React Query Integration**: Efficient server state management
-- **React Hook Form**: Form validation and submission
-- **Secure Storage**: Access tokens in memory, refresh tokens in localStorage
-- **Multi-tab Logout**: Token cleanup across browser tabs
-
 ## Tech Stack
 
 ### Frontend (client-app)
@@ -169,29 +159,3 @@ cd client-app
 npm run build
 npm start
 ```
-
-## Project Structure
-
-```
-├── server/                 # NestJS backend
-│   ├── src/
-│   │   ├── auth/           # Authentication module
-│   │   │   ├── dto/        # Data transfer objects
-│   │   │   ├── entities/   # Database entities
-│   │   │   ├── guards/     # Route guards
-│   │   │   └── strategies/ # Passport strategies
-│   │   └── user/           # User module
-│   └── package.json
-├── client-app/             # Next.js frontend
-│   ├── app/                # App router pages
-│   ├── components/         # React components
-│   ├── contexts/           # React contexts
-│   ├── hooks/              # Custom hooks
-│   ├── lib/                # Utility libraries
-│   └── package.json
-└── README.md
-```
-
-## License
-
-MIT
